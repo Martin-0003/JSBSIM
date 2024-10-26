@@ -59,12 +59,12 @@ def process_csv_folders(folder_paths):
         # Convert values
         v_true = result_df['NumericPart'] * fts_a_ms  # True airspeed in m/s
         drag = result_df['LastValue'] * lbf_a_N       # Drag in Newtons
-        Potencia_necesaria = v_true * drag            # Power in Watts
+        Potencia_necesaria = v_true * drag / 1000           # Power in KWatts
         
         # Add columns to the DataFrame
         result_df['NumericPart'] *= fts_a_ms               # Convert to m/s EAS
         result_df['Drag_N'] = drag                         # Drag in Newtons
-        result_df['Potencia_necesaria'] = Potencia_necesaria  # Power in Watts
+        result_df['Potencia_necesaria'] = Potencia_necesaria  # Power in KWatts
 
         print(result_df)
 
@@ -122,15 +122,15 @@ def plot_data(folder_paths, output_file, graph_file):
         plt.scatter(x, y, marker='o', label=f'Data points {os.path.basename(folder)}', alpha=0.6)  # Plot original data points
 
     # Adding labels, title, and legend
-    plt.xlabel('Speed EAS (m/s)')
-    plt.ylabel('Power (W)')
+    plt.xlabel('Speed TAS (m/s)')
+    plt.ylabel('Power (KW)')
     plt.title('Power vs Speed Comparison')
     plt.legend(loc='best')
 
     # Set up the grid with specified intervals
     plt.grid(visible=True, which='both', color='gray', linestyle='--', linewidth=0.5)
     plt.gca().xaxis.set_major_locator(ticker.MultipleLocator(10))
-    plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(50000))
+    plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(50))
 
     # Save the graph as a PNG file
     plt.tight_layout()
@@ -143,6 +143,10 @@ def plot_data(folder_paths, output_file, graph_file):
 # Example usage:
 folder_paths = ["/Users/martinalonsolalanda/jsbsim-master/Results/1700ft-6100lbm",
                 "/Users/martinalonsolalanda/jsbsim-master/Results/13000ft-6100lbm"]
+output_file = "merged_output.xlsx"               # Desired output Excel file name
+graph_file = "merged_output_graph.png"           # Desired graph file name
+plot_data(folder_paths, output_file, graph_file)
+
 output_file = "merged_output.xlsx"               # Desired output Excel file name
 graph_file = "merged_output_graph.png"           # Desired graph file name
 plot_data(folder_paths, output_file, graph_file)
